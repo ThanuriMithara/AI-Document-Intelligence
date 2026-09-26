@@ -19,11 +19,106 @@ st.set_page_config(
     page_title="AI Job Skill Gap Analyzer",
     page_icon="🎯",
     layout="wide",
+    initial_sidebar_state="collapsed",
+)
+
+# Custom Responsive CSS for PC, Tablet, and Mobile Devices
+st.markdown(
+    """
+    <style>
+    /* Responsive Content Container */
+    .main .block-container {
+        max-width: 1240px;
+        padding-top: 1.5rem;
+        padding-bottom: 3rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    /* Modern Card Layout */
+    .stCard {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        margin-bottom: 1rem;
+    }
+
+    /* Badges for Skills */
+    .badge-matched {
+        display: inline-block;
+        background-color: #ecfdf5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        margin: 4px;
+        font-weight: 600;
+        font-size: 0.92rem;
+        transition: transform 0.15s ease;
+    }
+    .badge-matched:hover {
+        transform: translateY(-1px);
+    }
+
+    .badge-missing {
+        display: inline-block;
+        background-color: #fff1f2;
+        color: #9f1239;
+        border: 1px solid #fecdd3;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        margin: 4px;
+        font-weight: 600;
+        font-size: 0.92rem;
+        transition: transform 0.15s ease;
+    }
+    .badge-missing:hover {
+        transform: translateY(-1px);
+    }
+
+    /* Device-specific responsiveness */
+    /* Tablets (iPad, 768px - 1024px) */
+    @media (max-width: 1024px) {
+        .main .block-container {
+            max-width: 95%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .badge-matched, .badge-missing {
+            font-size: 0.88rem;
+            padding: 5px 12px;
+        }
+    }
+
+    /* Mobile Phones (< 768px) */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            padding-top: 1rem;
+        }
+        h1 {
+            font-size: 1.75rem !important;
+        }
+        h2, h3 {
+            font-size: 1.25rem !important;
+        }
+        .badge-matched, .badge-missing {
+            font-size: 0.82rem;
+            padding: 4px 10px;
+            margin: 2px;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 # Custom header styling
 st.title("🎯 AI Job Skill Gap Analyzer")
-st.caption("Analyze the skill gap between a job description and your current skills.")
+st.caption("📱 Optimized for PC, Tablet, and Mobile screens.")
 st.markdown("---")
 
 # Load sample jobs dataset
@@ -203,22 +298,26 @@ if analyze_button:
             "They are **NOT** a prediction of candidate quality, competency, or probability of getting hired."
         )
 
-        # Skill Breakdown Columns
-        res_col1, res_col2 = st.columns(2)
+        # Skill Breakdown Columns (Responsive badges)
+        res_col1, res_col2 = st.columns(2, gap="medium")
 
         with res_col1:
-            st.subheader("✅ Matched Skills")
+            st.subheader(f"✅ Matched Skills ({len(matched_skills)})")
             if matched_skills:
-                for skill in matched_skills:
-                    st.markdown(f"- ✓ **{skill}**")
+                badges_html = "<div>" + "".join(
+                    f'<span class="badge-matched">✓ {skill}</span>' for skill in matched_skills
+                ) + "</div>"
+                st.markdown(badges_html, unsafe_allow_html=True)
             else:
-                st.write("No matching skills found.")
+                st.info("No matching skills found.")
 
         with res_col2:
-            st.subheader("⚠️ Missing Skills")
+            st.subheader(f"⚠️ Missing Skills ({len(missing_skills)})")
             if missing_skills:
-                for skill in missing_skills:
-                    st.markdown(f"- ⚠️ **{skill}**")
+                badges_html = "<div>" + "".join(
+                    f'<span class="badge-missing">⚠️ {skill}</span>' for skill in missing_skills
+                ) + "</div>"
+                st.markdown(badges_html, unsafe_allow_html=True)
             else:
                 st.success("🎉 No missing skills! You meet all listed requirements.")
 
