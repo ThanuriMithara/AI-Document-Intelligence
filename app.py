@@ -89,19 +89,26 @@ with col_right:
         placeholder="e.g. Python, SQL, Pandas, Git",
     )
 
-    st.write("**Or optionally upload your CV as a plain text (.txt) file:**")
+    st.write("**Or upload your CV (PDF or TXT):**")
     uploaded_file = st.file_uploader(
-        "Upload CV (.txt)",
-        type=["txt"],
-        help="Upload a simple text file of your resume or portfolio. Extracted skills will be combined.",
+        "Upload CV (.pdf or .txt)",
+        type=["pdf", "txt"],
+        help="Upload your CV/resume in PDF or TXT format. Extracted skills will be analyzed automatically.",
     )
 
     cv_text = ""
     if uploaded_file is not None:
         try:
-            cv_text = uploaded_file.read().decode("utf-8")
+            if uploaded_file.name.lower().endswith(".pdf"):
+                import pymupdf
+                doc = pymupdf.open(stream=uploaded_file.read(), filetype="pdf")
+                cv_text = "\n".join([page.get_text() for page in doc])
+                doc.close()
+            else:
+                cv_text = uploaded_file.read().decode("utf-8", errors="ignore")
+
             st.success(f"Loaded '{uploaded_file.name}' successfully!")
-            with st.expander("Preview uploaded CV text"):
+            with st.expander("Preview extracted CV text"):
                 st.text(cv_text[:600] + ("..." if len(cv_text) > 600 else ""))
         except Exception as e:
             st.error(f"Error reading file: {e}")
