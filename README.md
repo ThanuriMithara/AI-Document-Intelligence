@@ -1,5 +1,9 @@
 # AI Job Skill Gap Analyzer
 
+[![CI Pipeline](https://github.com/ThanuriMithara/AI-Document-Intelligence/actions/workflows/ci.yml/badge.svg)](https://github.com/ThanuriMithara/AI-Document-Intelligence/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 An intelligent, beginner-friendly Natural Language Processing (NLP) system that compares job descriptions against student skills, identifies missing requirements, computes mathematical text similarity, and provides actionable learning roadmaps.
 
 ---
